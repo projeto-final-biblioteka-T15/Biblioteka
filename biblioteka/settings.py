@@ -44,9 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 ]
 
-MY_APPS = [
-    "copies",
-]
+MY_APPS = ["copies", "books"]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
