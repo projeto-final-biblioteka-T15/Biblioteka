@@ -8,13 +8,13 @@ class CopySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Copy
-        fields = ("id", "available", "book_id")
+        fields = ("id", "available", "book")
         read_only_fields = ("id",)
 
     def create(self, validated_data):
-        book = self.context["book"]
-        validated_data["book"] = book
-        return Copy.objects.create(**validated_data)
+        book_data = self.context.get("book")
+        copy = Copy.objects.create(book=book_data, **validated_data)
+        return copy
 
     def update(self, instance: Copy, validated_data):
         for key, value in validated_data.items():
