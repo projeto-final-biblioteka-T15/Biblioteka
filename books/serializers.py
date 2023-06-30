@@ -14,3 +14,4 @@ class BooksSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return Book.objects.create(**validated_data)
+ 
