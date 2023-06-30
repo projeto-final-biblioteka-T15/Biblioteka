@@ -22,4 +22,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("users.urls")),
     path("api/", include("copies.urls")),
+    path("api/", include("books.urls")),
 ]
