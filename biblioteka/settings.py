@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
 MY_APPS = [
     "copies",
+    "books",
 ]
 
 MIDDLEWARE = [
