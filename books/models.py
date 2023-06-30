@@ -9,4 +9,5 @@ class Book(models.Model):
     title = models.CharField(max_length=255, unique=True)
     published_date = models.DateField()
 
-    owner = models.ForeignKey("users.User", on_delete=CASCADE, related_name="books")
+    owners = models.ForeignKey("users.User", on_delete=CASCADE, related_name="books")
+    # users = models.ManyToManyField(Users)
