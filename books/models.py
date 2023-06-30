@@ -1,5 +1,5 @@
-from tkinter import CASCADE
 from django.db import models
+from users.models import User
 
 
 class Book(models.Model):
@@ -9,5 +9,4 @@ class Book(models.Model):
     title = models.CharField(max_length=255, unique=True)
     published_date = models.DateField()
 
-    owners = models.ForeignKey("users.User", on_delete=CASCADE, related_name="books")
-    # users = models.ManyToManyField(Users)
+    users = models.ManyToManyField(User, related_name="books")
