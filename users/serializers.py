@@ -8,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        user_type = validated_data.pop('user_type')
+        user_type = validated_data.get('user_type')
         
         if user_type == 'library_staff':
             user = User.objects.create_superuser(**validated_data)
