@@ -1,10 +1,10 @@
 from rest_framework import serializers
 from books.models import Book
-from users.models import Users
+from users.models import User
 
 
 class BookSerializer(serializers.ModelSerializer):
-    users = serializers.PrimaryKeyRelatedField(queryset=Users.objects.all(), many=True)
+    users = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=True)
 
     class Meta:
         model = Book
