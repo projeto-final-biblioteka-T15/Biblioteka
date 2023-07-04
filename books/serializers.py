@@ -12,10 +12,6 @@ class BookSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "book_created_by"]
 
     def create(self, validated_data):
-        request = self.context.get("request")
-        if not request.user.is_superuser:
-            raise serializers.ValidationError("Only admin can create a book")
-
         book = Book.objects.create(**validated_data)
         book_owner = BookOwner.objects.create(
             book=book, user=self.context.get("request").user
