@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from books.models import Book, BookOwner
+from copies.models import Copies
 
 
 class BookSerializer(serializers.ModelSerializer):
@@ -21,5 +22,12 @@ class BookSerializer(serializers.ModelSerializer):
         if user:
             BookOwner.objects.create(book=book, user=user)
 
+        exist_copy = Copies.objects.filter(book=book)
+        
+        if exist_copy:
+            raise Copies.unique_error_message
+
+        copies = Copies.objects.create(book=book)
+    
         return book
 

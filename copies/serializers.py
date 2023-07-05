@@ -3,6 +3,7 @@ from .models import Copies
 from books.models import Book
 from books.serializers import BookSerializer, BookOwner
 
+
 class CopiesSerializer(serializers.ModelSerializer):
     book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all())
 
