@@ -9,7 +9,7 @@ from rest_framework.exceptions import ValidationError
 from books.permissions import IsLibraryStaff
 
 
-class CopyView(generics.ListCreateAPIView):
+class CopyView(generics.ListAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsLibraryStaffOrAuthenticated | IsAuthenticatedOrReadOnly]
 
