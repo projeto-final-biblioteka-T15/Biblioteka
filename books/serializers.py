@@ -22,3 +22,4 @@ class BookSerializer(serializers.ModelSerializer):
             BookOwner.objects.create(book=book, user=user)
 
         return book
+
