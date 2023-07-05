@@ -11,3 +11,5 @@ class User(AbstractUser):
     user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES, default='student')
     name = models.CharField(max_length=50)
     email = models.EmailField(unique=True, max_length=127)
+    is_blocked = models.BooleanField(default=False)
+    blocked_until = models.DateField(null=True, blank=True)
