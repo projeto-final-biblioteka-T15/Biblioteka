@@ -4,10 +4,11 @@ from users.models import User
 
 class Book(models.Model):
     title = models.CharField(max_length=255, unique=True)
-    published_date = models.DateField()
+    author = models.CharField(max_length=255)
+    description = models.TextField()
+    published_date = models.DateField(auto_now_add=True)
 
     book_created_by = models.ManyToManyField(User, through="BookOwner")
-    # users = models.ManyToManyField(User, related_name="books")
 
 
 class BookOwner(models.Model):

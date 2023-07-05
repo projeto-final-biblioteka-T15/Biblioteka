@@ -1,9 +1,11 @@
 from django.db import models
+from books.models import Book
 
+class Copies(models.Model):
+    total = models.PositiveIntegerField(default=0)
+    available = models.PositiveIntegerField(default=0)
 
-class Copy(models.Model):
-    available = models.BooleanField(default=True)
+    book = models.ForeignKey(Book, related_name="copies", on_delete=models.CASCADE)
 
-    book = models.ForeignKey(
-        "books.Book", on_delete=models.CASCADE, related_name="copies"
-    )
+    class Meta:
+        unique_together = ("book",)
