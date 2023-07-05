@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Copies
 from books.models import Book
-from books.serializers import BookSerializer, BookOwner
+from books.serializers import BookSerializer
 
 
 class CopiesSerializer(serializers.ModelSerializer):
