@@ -6,9 +6,13 @@ from .models import Loan
 
 
 class LoanView(generics.ListCreateAPIView):
-
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     queryset = Loan.objects.all()
     serializer_class = LoanSerializer
+
+
+# class ReturnView(generics.UpdateAPIView):
+#     authentication_classes = [JWTAuthentication]
+#     permission_classes = []
