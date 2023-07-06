@@ -1,13 +1,19 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import Copies
 from loans.models import Loan
-from .serializers import CopiesSerializer
+from .serializers import CopiesSerializer, BookFollower
 from .permissions import IsLibraryStaffOrAuthenticated
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from books.permissions import IsLibraryStaff
+from rest_framework.views import APIView
+from rest_framework.request import Request
+from .serializers import SendEmailSerializer, BookFollowerSerializer
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 class CopyView(generics.ListAPIView):
@@ -32,7 +38,9 @@ class CopyDetailView(generics.RetrieveUpdateAPIView):
         allowed_fields = set(["total", "available"])
         updated_fields = set(request.data.keys())
         if not updated_fields.issubset(allowed_fields):
-            raise ValidationError("Apenas os campos 'total' e 'available' podem ser alterados.")
+            raise ValidationError(
+                "Apenas os campos 'total' e 'available' podem ser alterados."
+            )
 
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
@@ -46,3 +54,44 @@ class CopyDetailView(generics.RetrieveUpdateAPIView):
             instance.check_user_blocked(loan.user)
 
         return Response(serializer.data)
+
+
+class BookFollowView(generics.ListCreateAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    queryset = BookFollower.objects.all()
+    serializer_class = BookFollowerSerializer
+
+    lookup_field = "pk"
+
+    def create(self, request, *args, **kwargs):
+        user = request.user
+        copy_id = kwargs["pk"]
+        copy = get_object_or_404(Copies, pk=copy_id)
+
+        book = copy.book
+
+        book_follower, created = BookFollower.objects.get_or_create(
+            user=user, book=book
+        )
+
+        if created:
+            return Response({"message": "Você agora está seguindo este livro."})
+        else:
+            return Response({"message": "Você já está seguindo este livro."})
+
+
+# para testar o envio de e-mail
+class SendEmailView(APIView):
+    def post(self, request: Request) -> Response:
+        serializer = SendEmailSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        send_mail(
+            **serializer.validated_data,
+            from_email=settings.EMAIL_HOST_USER,
+            fail_silently=False
+        )
+
+        return Response({"message": "E-mail enviado."})
