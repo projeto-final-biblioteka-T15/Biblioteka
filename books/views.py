@@ -21,11 +21,11 @@ class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = BookSerializer
 
 
-# class BookListLatest(generics.ListCreateAPIView):
-#     authentication_classes = [JWTAuthentication]
-#     permission_classes = [IsLibraryStaff]
+class BookListLatest(generics.ListCreateAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsLibraryStaff]
 
-#     serializer_class = BookSerializer
+    serializer_class = BookSerializer
 
-#     def get_queryset(self):
-#         return Book.objects.all().order_by("-published_date")
+    def get_queryset(self):
+        return Book.objects.all().order_by("-published_date")
