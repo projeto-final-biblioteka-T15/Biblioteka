@@ -5,6 +5,7 @@ from loans.serializer import LoanSerializer
 from .models import Loan
 from books.permissions import IsLibraryStaff
 from rest_framework.response import Response
+from rest_framework import status
 
 
 class LoanView(generics.ListCreateAPIView):
@@ -32,6 +33,10 @@ class LoanReturnView(generics.UpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
+        
+        if instance.returned:
+            return Response({"detail": "O empréstimo já foi devolvido."}, status=status.HTTP_400_BAD_REQUEST)
+        
         instance.returned = True
         instance.save()
 

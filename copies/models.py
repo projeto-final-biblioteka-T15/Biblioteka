@@ -1,6 +1,5 @@
 from django.db import models
 from books.models import Book
-
 from django.utils import timezone
 from loans.models import Loan
 from datetime import timedelta
