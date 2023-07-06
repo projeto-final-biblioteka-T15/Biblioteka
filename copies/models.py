@@ -28,10 +28,4 @@ class Copies(models.Model):
             loan.save()
             self.check_user_blocked(loan.user)
 
-    def check_user_blocked(self, user):
-        loans_pending = Loan.objects.filter(user=user, returned=False, return_date__lt=timezone.now()).exists()
-
-        if loans_pending:
-            user.is_blocked = True
-            user.blocked_until = timezone.now() + timedelta(days=7)
-            user.save()
+    
