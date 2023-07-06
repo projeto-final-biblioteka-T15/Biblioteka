@@ -6,6 +6,7 @@ from .models import Loan
 from books.permissions import IsLibraryStaff
 from rest_framework.response import Response
 from rest_framework import status
+from django.utils import timezone
 
 
 class LoanView(generics.ListCreateAPIView):
@@ -38,9 +39,12 @@ class LoanReturnView(generics.UpdateAPIView):
             return Response({"detail": "O empréstimo já foi devolvido."}, status=status.HTTP_400_BAD_REQUEST)
         
         instance.returned = True
+        instance.return_made = timezone.now().date()
         instance.save()
 
         instance.copy.return_copy()
+
+        instance.check_return_date()
 
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
