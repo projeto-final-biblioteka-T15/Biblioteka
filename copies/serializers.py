@@ -16,7 +16,7 @@ class CopiesSerializer(serializers.ModelSerializer):
         book = BookSerializer(instance.book).data
         representation["book"] = book
         return representation
-
+    
     def create(self, validated_data):
         book_id = validated_data.pop("book").id
         book = Book.objects.get(id=book_id)        

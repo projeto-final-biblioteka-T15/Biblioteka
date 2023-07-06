@@ -23,11 +23,16 @@ class Copies(models.Model):
         self.available += 1
         self.save()
 
-        loan = Loan.objects.filter(copy=self, return_date__lt=timezone.now()).first()
+        loan = Loan.objects.filter(copy=self, returned=False).first()
         if loan:
-            # O livro foi devolvido após a data de retorno estipulada
-            loan.user.is_blocked = True
-            loan.user.blocked_until = timezone.now() + timedelta(
-                days=7
-            )  # Bloqueia o usuário por 7 dias
-            loan.user.save()
+            loan.returned = True
+            loan.save()
+            self.check_user_blocked(loan.user)
+
+    def check_user_blocked(self, user):
+        loans_pending = Loan.objects.filter(user=user, returned=False, return_date__lt=timezone.now()).exists()
+
+        if loans_pending:
+            user.is_blocked = True
+            user.blocked_until = timezone.now() + timedelta(days=7)
+            user.save()
