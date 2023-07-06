@@ -34,9 +34,6 @@ class CopyDetailView(generics.RetrieveUpdateDestroyAPIView):
         if not updated_fields.issubset(allowed_fields):
             raise ValidationError("Apenas os campos 'total' e 'available' podem ser alterados.")
 
-        if "returned" in request.data and request.data["returned"]:
-            instance.return_copy()
-
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
