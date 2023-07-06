@@ -27,6 +27,10 @@ class LoanSerializer(serializers.ModelSerializer):
 
         if copy.available == 0:
             raise serializers.ValidationError("Não há cópias disponíveis para empréstimo.")
+        
+        active_loan = Loan.objects.filter(user=user, copy=copy, returned=False).first()
+        if active_loan:
+            raise serializers.ValidationError("O usuário já possui um empréstimo ativo para esta cópia.")
 
         loan_date = date.today()
         # return_date = validated_data.get("return_date") para teste usuário bloqueado
