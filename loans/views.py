@@ -7,28 +7,34 @@ from books.permissions import IsLibraryStaff
 from rest_framework.response import Response
 from rest_framework import status
 from django.utils import timezone
+from rest_framework.exceptions import PermissionDenied
 
 
 class LoanView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsLibraryStaff]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     queryset = Loan.objects.all()
     serializer_class = LoanSerializer
 
     def perform_create(self, serializer):
+        user = self.request.user
+
+        if user.user_type != 'library_staff':
+            raise PermissionDenied("Você não tem permissão para criar empréstimos.")
+
         loan = serializer.save()
         loan.copy.loan_copy()
 
-    def perform_update(self, serializer):
-        loan = serializer.save()
-        if loan.returned:
-            loan.copy.return_copy()
-
     def get_queryset(self):
         queryset = super().get_queryset()
-        pending_returns = self.request.query_params.get('pending')
+        user = self.request.user
+
+        if user.user_type == 'student':
+            queryset = queryset.filter(user=user)
+        
         user_id = self.request.query_params.get('user_id')
+        pending_returns = self.request.query_params.get('pending')
 
         if user_id:
             queryset = queryset.filter(user_id=user_id)
