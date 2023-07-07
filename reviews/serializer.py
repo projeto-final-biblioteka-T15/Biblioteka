@@ -19,4 +19,9 @@ class ReviewSerializer(serializers.ModelSerializer):
         book = copy.book
         user = self.context["request"].user
 
-        return Review.objects.create(book=book, user=user, **validated_data)
+        return Review.create_review(
+            book=book,
+            user=user,
+            review_text=validated_data.get("review_text"),
+            rating=validated_data.get("rating"),
+        )
