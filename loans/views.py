@@ -11,7 +11,7 @@ from django.utils import timezone
 
 class LoanView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsLibraryStaff]
 
     queryset = Loan.objects.all()
     serializer_class = LoanSerializer
@@ -25,6 +25,21 @@ class LoanView(generics.ListCreateAPIView):
         if loan.returned:
             loan.copy.return_copy()
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        pending_returns = self.request.query_params.get('pending')
+        user_id = self.request.query_params.get('user_id')
+
+        if user_id:
+            queryset = queryset.filter(user_id=user_id)
+
+        if pending_returns:
+            queryset = queryset.filter(returned=False)
+
+        return queryset
+
+    
+
 class LoanReturnView(generics.UpdateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsLibraryStaff]
@@ -36,10 +51,11 @@ class LoanReturnView(generics.UpdateAPIView):
         instance = self.get_object()
         
         if instance.returned:
-            return Response({"detail": "O empréstimo já foi devolvido."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": "O livro já foi devolvido."}, status=status.HTTP_400_BAD_REQUEST)
         
         instance.returned = True
         instance.return_made = timezone.now().date()
+
         instance.save()
 
         instance.copy.return_copy()

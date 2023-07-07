@@ -1,8 +1,6 @@
 from django.db import models
 from books.models import Book
-from django.utils import timezone
 from loans.models import Loan
-from datetime import timedelta
 from django.core.mail import send_mail
 from users.models import User
 
