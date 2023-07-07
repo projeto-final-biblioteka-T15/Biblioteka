@@ -25,6 +25,11 @@ class LoanView(generics.ListCreateAPIView):
 
         loan = serializer.save()
         loan.copy.loan_copy()
+    
+    def perform_update(self, serializer):
+        loan = serializer.save()
+        if loan.returned:
+            loan.copy.return_copy()
 
     def get_queryset(self):
         queryset = super().get_queryset()
