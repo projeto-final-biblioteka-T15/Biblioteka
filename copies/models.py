@@ -1,8 +1,6 @@
 from django.db import models
 from books.models import Book
-from django.utils import timezone
 from loans.models import Loan
-from datetime import timedelta
 from django.core.mail import send_mail
 from users.models import User
 
@@ -46,14 +44,3 @@ class Copies(models.Model):
             loan.save()
             self.check_user_blocked(loan.user)
 
-        self.notify_followers()
-
-    def check_user_blocked(self, user):
-        loans_pending = Loan.objects.filter(
-            user=user, returned=False, return_date__lt=timezone.now()
-        ).exists()
-
-        if loans_pending:
-            user.is_blocked = True
-            user.blocked_until = timezone.now() + timedelta(days=7)
-            user.save()

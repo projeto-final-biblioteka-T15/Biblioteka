@@ -11,7 +11,7 @@ class LoanSerializer(serializers.ModelSerializer):
 
     loan_date = serializers.DateField(format="%Y-%m-%d", read_only=True)
     return_date = serializers.DateField(format="%Y-%m-%d", read_only=True)
-    #return_date = serializers.DateField(format="%Y-%m-%d") para teste usuário bloqueado
+    #return_date = serializers.DateField(format="%Y-%m-%d") #para teste usuário bloqueado
     returned = serializers.BooleanField(read_only=True)
 
     class Meta:
@@ -33,7 +33,7 @@ class LoanSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("O usuário já possui um empréstimo ativo para esta cópia.")
 
         loan_date = date.today()
-        # return_date = validated_data.get("return_date") para teste usuário bloqueado
+        #return_date = validated_data.get("return_date") #para teste usuário bloqueado
         return_date = loan_date + timedelta(days=7) 
         while return_date.weekday() >= 5:  
             return_date += timedelta(days=1) 

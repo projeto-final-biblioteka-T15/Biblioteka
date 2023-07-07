@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-from datetime import timedelta
 
 
 class Loan(models.Model):
@@ -15,6 +14,6 @@ class Loan(models.Model):
     def check_return_date(self):
         if self.return_made and self.return_made > self.return_date:
             self.user.is_blocked = True
-            self.user.blocked_until = timezone.now().date() + timezone.timedelta(days=7)
+            self.user.blocked_until = timezone.now().date() + timezone.timedelta(days=1)
             self.user.save()
 
