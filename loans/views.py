@@ -74,4 +74,5 @@ class LoanReturnView(generics.UpdateAPIView):
         instance.check_return_date()
 
         serializer = self.get_serializer(instance)
+
         return Response(serializer.data)
