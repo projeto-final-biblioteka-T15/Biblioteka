@@ -3,6 +3,7 @@ from books.models import Book
 from loans.models import Loan
 from django.core.mail import send_mail
 from users.models import User
+from django.conf import settings
 
 
 class BookFollower(models.Model):
@@ -22,17 +23,7 @@ class Copies(models.Model):
             self.save()
         else:
             raise Exception("Não há cópias disponíveis para empréstimo.")
-
-    def notify_followers(self):
-        if self.available > 0:
-            followers = BookFollower.objects.filter(book=self.book)
-            for follower in followers:
-                send_mail(
-                    "Novo livro disponível",
-                    f"O livro {self.book.title} está disponível",
-                    [follower.user.email],
-                    fail_silently=False,
-                )
+        
 
     def return_copy(self):
         self.available += 1
@@ -43,4 +34,16 @@ class Copies(models.Model):
             loan.returned = True
             loan.save()
             self.check_user_blocked(loan.user)
+        
+        
+        if self.available == 1:            
+            followers = BookFollower.objects.filter(book=self.book)            
+            for follower in followers:
+                send_mail(
+                    from_email=settings.EMAIL_HOST_USER,
+                    subject="Novo livro disponível",
+                    message=f"O livro {self.book.title} está disponível",
+                    recipient_list=[follower.user.email],
+                    fail_silently=False,
+                )
 

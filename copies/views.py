@@ -56,6 +56,8 @@ class CopyDetailView(generics.RetrieveUpdateAPIView):
         return Response(serializer.data)
 
 
+
+
 class BookFollowView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -80,18 +82,3 @@ class BookFollowView(generics.ListCreateAPIView):
             return Response({"message": "Você agora está seguindo este livro."})
         else:
             return Response({"message": "Você já está seguindo este livro."})
-
-
-# para testar o envio de e-mail
-class SendEmailView(APIView):
-    def post(self, request: Request) -> Response:
-        serializer = SendEmailSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        send_mail(
-            **serializer.validated_data,
-            from_email=settings.EMAIL_HOST_USER,
-            fail_silently=False
-        )
-
-        return Response({"message": "E-mail enviado."})
