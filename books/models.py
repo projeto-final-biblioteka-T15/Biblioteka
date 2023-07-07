@@ -1,12 +1,16 @@
-from tkinter import CASCADE
 from django.db import models
+from users.models import User
 
 
 class Book(models.Model):
-    class Meta:
-        ordering = ["id"]
-
     title = models.CharField(max_length=255, unique=True)
-    published_date = models.DateField()
+    author = models.CharField(max_length=255)
+    description = models.TextField()
+    published_date = models.DateField(auto_now_add=True)
 
-    owner = models.ForeignKey("users.User", on_delete=CASCADE, related_name="books")
+    book_created_by = models.ManyToManyField(User, through="BookOwner")
+
+
+class BookOwner(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
