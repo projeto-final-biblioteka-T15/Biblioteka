@@ -10,7 +10,6 @@ from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from books.permissions import IsLibraryStaff
 from .serializers import BookFollowerSerializer
-from django.db.models import Q
 
 
 class CopyView(generics.ListAPIView):
@@ -24,12 +23,16 @@ class CopyView(generics.ListAPIView):
 
         author = self.request.query_params.get('author', None)
         title = self.request.query_params.get('title', None)
+        copy_id = self.request.query_params.get('copy_id', None)
 
         if author:
-            queryset = queryset.filter(Q(book__author__icontains=author))
+            queryset = queryset.filter(book__author__icontains=author)
 
         if title:
-            queryset = queryset.filter(Q(book__title__icontains=title))
+            queryset = queryset.filter(book__title__icontains=title)
+
+        if copy_id:  
+            queryset = queryset.filter(id=copy_id)
 
         return queryset
 
