@@ -27,6 +27,16 @@ class ListReviewView(generics.ListAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        copy_id = self.request.query_params.get('copy_id')
+        
+        if copy_id:
+            copy = get_object_or_404(Copies, id=copy_id)
+            queryset = queryset.filter(book=copy.book)
+        
+        return queryset
+
 
 class ReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [JWTAuthentication]
