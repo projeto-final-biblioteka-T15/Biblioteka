@@ -32,10 +32,3 @@ class CopiesSerializer(serializers.ModelSerializer):
         copies = Copies.objects.create(book=book, **validated_data)
 
         return copies
-
-
-# para testar o envio de e-mail
-class SendEmailSerializer(serializers.Serializer):
-    subject = serializers.CharField()
-    message = serializers.CharField()
-    recipient_list = serializers.ListField()
