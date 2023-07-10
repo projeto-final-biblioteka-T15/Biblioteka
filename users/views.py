@@ -12,28 +12,28 @@ class UserView(generics.CreateAPIView):
     serializer_class = UserSerializer
     
 
+
 class UserListView(generics.ListAPIView):
     authentication_classes = [JWTAuthentication]
 
     serializer_class = UserSerializer
     queryset = User.objects.all()
 
-
-    def get_permissions(self):
-        if self.request.user.user_type == 'library_staff':
-            return [IsAdminUser()]
-        else:
-            return [IsAccountOwner()]
+    # def get_permissions(self):
+    #     if self.request.user.user_type == 'library_staff':
+    #         return [IsAdminUser()]
+    #     else:
+    #         return [IsAccountOwner()]
 
     def get_queryset(self):
         queryset = super().get_queryset()
 
-        user_id = self.request.query_params.get('user_id')
+        user_id = self.request.query_params.get("user_id")
 
-        if self.request.user.user_type == 'library_staff' and user_id:
+        if self.request.user.user_type == "library_staff" and user_id:
             user = get_object_or_404(queryset, id=user_id)
             queryset = User.objects.filter(id=user.id)
-        elif self.request.user.user_type == 'student':
+        elif self.request.user.user_type == "student":
             queryset = User.objects.filter(id=self.request.user.id)
 
         return queryset

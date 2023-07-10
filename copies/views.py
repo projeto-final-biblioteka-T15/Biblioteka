@@ -12,6 +12,7 @@ from books.permissions import IsLibraryStaff
 from .serializers import BookFollowerSerializer
 
 
+
 class CopyView(generics.ListAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsLibraryStaffOrAuthenticated | IsAuthenticatedOrReadOnly]
