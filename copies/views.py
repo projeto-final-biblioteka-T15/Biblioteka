@@ -10,15 +10,28 @@ from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from books.permissions import IsLibraryStaff
 from .serializers import BookFollowerSerializer
-
+from django.db.models import Q
 
 
 class CopyView(generics.ListAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsLibraryStaffOrAuthenticated | IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
-    queryset = Copies.objects.all()
     serializer_class = CopiesSerializer
+
+    def get_queryset(self):
+        queryset = Copies.objects.all()
+
+        author = self.request.query_params.get('author', None)
+        title = self.request.query_params.get('title', None)
+
+        if author:
+            queryset = queryset.filter(Q(book__author__icontains=author))
+
+        if title:
+            queryset = queryset.filter(Q(book__title__icontains=title))
+
+        return queryset
 
 
 class CopyDetailView(generics.RetrieveUpdateAPIView):
