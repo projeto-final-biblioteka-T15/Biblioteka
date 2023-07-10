@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from books.permissions import IsLibraryStaff
 from .serializers import BookFollowerSerializer
-from django.core.mail import send_mail
+
 
 
 class CopyView(generics.ListAPIView):

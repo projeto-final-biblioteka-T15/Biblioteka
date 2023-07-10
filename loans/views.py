@@ -48,7 +48,6 @@ class LoanView(generics.ListCreateAPIView):
             queryset = queryset.filter(returned=False)
 
         return queryset
-
     
 
 class LoanReturnView(generics.UpdateAPIView):

@@ -30,4 +30,3 @@ class BookSerializer(serializers.ModelSerializer):
         copies = Copies.objects.create(book=book)
     
         return book
-
