@@ -21,7 +21,7 @@ class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = BookSerializer
 
 
-class BookListLatest(generics.ListCreateAPIView):
+class BookListLatest(generics.ListAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsLibraryStaff]
 

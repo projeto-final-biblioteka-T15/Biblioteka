@@ -41,9 +41,8 @@ class Copies(models.Model):
             for follower in followers:
                 send_mail(
                     from_email=settings.EMAIL_HOST_USER,
-                    subject="Novo livro disponível",
-                    message=f"O livro {self.book.title} está disponível",
+                    subject="Livro disponível",
+                    message=f"O livro {self.book.title} está disponível para empréstimo",
                     recipient_list=[follower.user.email],
                     fail_silently=False,
                 )
-

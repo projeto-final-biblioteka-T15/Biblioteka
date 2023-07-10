@@ -12,7 +12,9 @@ class Review(models.Model):
     rating = models.IntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(10)]
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
+
 
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -22,7 +24,7 @@ class Review(models.Model):
         review_exists = cls.objects.filter(book=book, user=user).exists()
         if review_exists:
             raise serializers.ValidationError(
-                {"message": "You can't review this book twice."}
+                {"message": "Você não pode avaliar este livro duas vezes."}
             )
 
         loaned_and_returned = Loan.objects.filter(
@@ -31,7 +33,7 @@ class Review(models.Model):
 
         if not loaned_and_returned:
             raise serializers.ValidationError(
-                {"message": "You can't review this book before borrowing it."}
+                {"message": "Você não pode avaliar este livro antes de pegá-lo emprestado"}
             )
 
         review = cls.objects.create(

@@ -9,11 +9,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from books.permissions import IsLibraryStaff
-from rest_framework.views import APIView
-from rest_framework.request import Request
-from .serializers import SendEmailSerializer, BookFollowerSerializer
-from django.core.mail import send_mail
-from django.conf import settings
+from .serializers import BookFollowerSerializer
 
 
 class CopyView(generics.ListAPIView):
@@ -54,8 +50,6 @@ class CopyDetailView(generics.RetrieveUpdateAPIView):
             instance.check_user_blocked(loan.user)
 
         return Response(serializer.data)
-
-
 
 
 class BookFollowView(generics.ListCreateAPIView):

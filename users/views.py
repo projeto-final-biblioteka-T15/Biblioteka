@@ -7,10 +7,10 @@ from rest_framework.permissions import IsAdminUser
 from django.shortcuts import get_object_or_404
 
 
-
 class UserView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    
 
 class UserListView(generics.ListAPIView):
     authentication_classes = [JWTAuthentication]
@@ -37,8 +37,6 @@ class UserListView(generics.ListAPIView):
             queryset = User.objects.filter(id=self.request.user.id)
 
         return queryset
-
-
 
 
 class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
