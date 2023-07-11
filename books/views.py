@@ -17,16 +17,16 @@ class BookView(generics.ListCreateAPIView):
 
         author = self.request.query_params.get('author', None)
         title = self.request.query_params.get('title', None)
+        book_id = self.request.query_params.get('book_id', None)
 
         if author:
-            queryset = queryset.filter(
-                Q(author__icontains=author)
-            )
+            queryset = queryset.filter(author__icontains=author)
         
         if title:
-            queryset = queryset.filter(
-                Q(title__icontains=title)
-            )
+            queryset = queryset.filter(title__icontains=title)
+
+        if book_id:  
+            queryset = queryset.filter(id=book_id)
 
         return queryset
 
