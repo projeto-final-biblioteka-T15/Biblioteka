@@ -2,15 +2,14 @@ from rest_framework import generics
 from .models import User
 from .serializers import UserSerializer
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from .permissions import IsAccountOwner
-from rest_framework.permissions import IsAdminUser
 from django.shortcuts import get_object_or_404
+from .permissions import IsAccountOwner
+from rest_framework.views import Response, status
 
 
 class UserView(generics.CreateAPIView):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
-    
+    serializer_class = UserSerializer   
 
 
 class UserListView(generics.ListAPIView):
@@ -18,12 +17,6 @@ class UserListView(generics.ListAPIView):
 
     serializer_class = UserSerializer
     queryset = User.objects.all()
-
-    # def get_permissions(self):
-    #     if self.request.user.user_type == 'library_staff':
-    #         return [IsAdminUser()]
-    #     else:
-    #         return [IsAccountOwner()]
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -45,6 +38,9 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    def get(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def perform_update(self, serializer):
         password = self.request.data.get("password", None)

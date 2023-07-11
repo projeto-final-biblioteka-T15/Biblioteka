@@ -1,5 +1,4 @@
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import Review
 from .serializer import ReviewSerializer
@@ -11,7 +10,6 @@ from datetime import date
 
 class CreateReviewView(generics.CreateAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
